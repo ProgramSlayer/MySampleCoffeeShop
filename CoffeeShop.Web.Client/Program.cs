@@ -6,6 +6,7 @@ using CoffeeShop.Web.Client.Services.Authentication;
 using CoffeeShop.Web.Client.Services.AuthProviders;
 using CoffeeShop.Web.Client.Services.Coffees;
 using CoffeeShop.Web.Client.Services.CoffeeSpecies;
+using CoffeeShop.Web.Client.Services.Orders;
 using CoffeeShop.Web.Client.Services.ShoppingCarts;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -34,6 +35,7 @@ builder.Services
     .AddScoped<ICoffeeSpeciesService, CoffeeSpeciesService>()
     .AddScoped<ICoffeesService, CoffeesService>()
     .AddScoped<IShoppingCartsService, ShoppingCartsService>()
+    .AddScoped<IOrdersService, OrdersService>()
     .AddScoped<HttpInterceptorService>();
 
 await builder.Build().RunAsync();

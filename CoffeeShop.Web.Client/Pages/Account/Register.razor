@@ -7,36 +7,36 @@
 <section class="section-content padding-y bg">
     <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
         <article class="card-body">
-            <header class="mb-4"><h4 class="card-title">Register</h4></header>
+            <header class="mb-4"><h4 class="card-title">Регистрация</h4></header>
             <EditForm Model="_model" OnValidSubmit="SubmitAsync">
 
                 <ErrorsList ShowErrors="_showErrors" Errors="_errors" />
                 <DataAnnotationsValidator />
 
                 <div class="form-group">
-                    <label>E-mail</label>
+                    <label>Адрес электронный почты</label>
                     <InputText @bind-Value="_model.Email" type="email" class="form-control" />
                     <ValidationMessage For="@(() => _model.Email)" />
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
+                    <label>Пароль</label>
                     <InputText @bind-Value="_model.Password" type="password" class="form-control" />
                     <ValidationMessage For="@(() => _model.Password)" />
                 </div>
                 <div class="form-group">
-                    <label>Confirm password</label>
+                    <label>Подтверждение пароля</label>
                     <InputText @bind-Value="_model.ConfirmPassword" type="password" class="form-control" />
                     <ValidationMessage For="@(() => _model.ConfirmPassword)" />
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Register </button>
+                    <button type="submit" class="btn btn-primary btn-block"> Зарегистрироваться </button>
                 </div>
             </EditForm>
         </article>
     </div>
 
-    <p class="text-center mt-4">Already have an account? <a href="/account/login">Log In</a></p>
+    <p class="text-center mt-4">Уже есть аккаунт? <a href="/account/login">Войти</a></p>
     <br /><br />
 
 </section>

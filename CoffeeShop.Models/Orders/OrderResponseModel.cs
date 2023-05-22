@@ -9,6 +9,8 @@ public record OrderResponseModel(
     string CreatedOn,
     string? ModifiedOn)
 {
+    // For JSON deserialization.
+    public OrderResponseModel() : this(default, default, default, default) { }
     public OrderResponseModel(Order order) 
         : this(
         order.Id,

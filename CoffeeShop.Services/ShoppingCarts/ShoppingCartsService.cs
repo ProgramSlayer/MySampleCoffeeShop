@@ -18,26 +18,32 @@ public class ShoppingCartsService : BaseService<ShoppingCart>, IShoppingCartsSer
     {
         try
         {
-            var shoppingCart = await All()
-                .Where(sc => sc.UserId == userId)
+            var item = await Data
+                .ShoppingCartItems
+                .Where(i => i.ShoppingCart.UserId == userId && i.CoffeeId == model.CoffeeId)
                 .FirstOrDefaultAsync();
 
-            shoppingCart ??= new ShoppingCart
+            if (item is null)
             {
-                UserId = userId,
-            };
+                item = new()
+                {
+                    CoffeeId = model.CoffeeId,
+                    Quantity = model.Quantity,
+                    ShoppingCartId = 0,
+                    ShoppingCart = new()
+                    {
+                        UserId = userId
+                    },
+                };
 
-            var shoppingCartItem = new ShoppingCartItem
+                await Data.ShoppingCartItems.AddAsync(item);
+            }
+            else
             {
-                CoffeeId = model.CoffeeId,
-                Quantity = model.Quantity,
-                ShoppingCartId = shoppingCart.Id,
-                ShoppingCart = shoppingCart,
-            };
+                item.Quantity += model.Quantity;
+            }
 
-            await Data.AddAsync(shoppingCartItem);
             await Data.SaveChangesAsync();
-
             return Result.NoContent;
         }
         catch (Exception ex)
@@ -133,7 +139,7 @@ public class ShoppingCartsService : BaseService<ShoppingCart>, IShoppingCartsSer
         try
         {
             var item = await Data.ShoppingCartItems
-            .Include(i => i.ShoppingCart)
+                .Include(i => i.ShoppingCart)
                 .Where(i => i.CoffeeId == model.CoffeeId && i.ShoppingCart.UserId == userId)
                 .FirstOrDefaultAsync();
 

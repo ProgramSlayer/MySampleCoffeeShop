@@ -1,14 +1,70 @@
 ﻿@page "/coffees"
 
 @inject ICoffeesService CoffeesService
+@inject IShoppingCartsService ShoppingCartsService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
 
 @if (_coffees is null)
 {
-    <span>Got no data to show</span>
+    <span>Загрузка...</span>
 }
 else
 {
-    <CoffeesTable Coffees="_coffees.ToList()" />
+    <section class="section-content padding-y bg">
+        <div class="container">
+
+            <div class="row">
+
+                <main class="col-md-9">
+
+                    <header class="border-bottom mb-4 pb-3">
+                        <div class="form-inline">
+                            <span class="mr-md-auto">@_coffees.Count() товаров найдено </span>
+                        </div>
+                    </header>
+
+                    <div class="row">
+
+                        @foreach (var coffee in _coffees)
+                        {
+                            <div class="col-md-4">
+                                <figure class="card card-product-grid">
+                                    <div class="img-wrap">
+                                        @*<img src="@product.ImageSource" />*@
+                                        <a class="btn-overlay" href="/coffees/@coffee.Id">
+                                            @*<i class="fa fa-search-plus"></i>*@
+                                            Подробнее
+                                        </a>
+                                    </div>
+                                    <figcaption class="info-wrap">
+                                        <div class="fix-height">
+                                            <a href="/coffees/@coffee.Id" class="title">
+                                                @coffee.Name
+                                            </a>
+                                            <div class="price-wrap mt-2">
+                                                <span class="price">RUB @coffee.UnitSellPriceRoubles</span>
+                                            </div>
+                                        </div>
+                                        <a @onclick="() => AddToCart(coffee.Id)"
+                                        @onclick:preventDefault
+                                           href="#"
+                                           class="btn btn-block btn-primary">
+                                            Добавить в корзину
+                                        </a>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        }
+
+                    </div>
+
+                </main>
+
+            </div>
+
+        </div>
+    </section>
 }
 
 @code{
@@ -22,5 +78,25 @@ else
     private async Task LoadDataAsync()
     {
         _coffees = await CoffeesService.GetAllAsync();
+    }
+
+    private async Task AddToCart(int id)
+    {
+        var cartRequest = new ShoppingCartRequestModel
+        {
+            CoffeeId = id,
+            Quantity = 1
+        };
+
+        var result = await ShoppingCartsService.AddItem(cartRequest);
+
+        if (!result.IsSuccessful)
+        {
+            ToastService.ShowError(result.Errors.First());
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/cart", forceLoad: true);
+        }
     }
 }

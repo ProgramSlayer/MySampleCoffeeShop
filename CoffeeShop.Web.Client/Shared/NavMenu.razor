@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">CoffeeShop.Web.Client</a>
+        @*<a class="navbar-brand" href="">CoffeeShop.Web.Client</a>*@
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -16,7 +16,7 @@
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="coffees">
-                <span class="oi oi-list" aria-hidden="true"></span> Coffees
+                <span class="oi oi-list" aria-hidden="true"></span> Кофе
             </NavLink>
         </div>
 
@@ -24,25 +24,19 @@
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="coffees/add">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Add Coffee
+                    <span class="oi oi-plus" aria-hidden="true"></span> Добавить кофе
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="cart">
-                    <span class="oi oi-cart" aria-hidden="true"></span> My Shopping Cart
+                    <span class="oi oi-cart" aria-hidden="true"></span> Корзина
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="orders">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> My Orders
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="addresses">
-                    <span class="oi oi-globe" aria-hidden="true"></span> My Delivery Addresses
+                <NavLink class="nav-link" href="myorders">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Мои заказы
                 </NavLink>
             </div>
         </AuthorizeView>

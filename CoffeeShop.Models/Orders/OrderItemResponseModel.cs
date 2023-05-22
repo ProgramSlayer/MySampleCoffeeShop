@@ -8,6 +8,10 @@ public record OrderItemResponseModel(
     decimal UnitSellPriceRoubles,
     int Quantity)
 {
+    public OrderItemResponseModel() : this(default, default, default, default)
+    {
+    }
+
     public OrderItemResponseModel(OrderItem oi) 
         : this(
         oi.CoffeeId,

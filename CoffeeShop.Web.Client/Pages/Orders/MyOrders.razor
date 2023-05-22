@@ -1,0 +1,65 @@
+﻿@page "/myorders"
+@attribute [Authorize]
+
+@inject IOrdersService OrdersService
+
+@if (_orders == null)
+{
+    <span>Загрузка...</span>
+}
+else
+{
+    <section class="section-content padding-y bg">
+        <div class="container">
+
+            <div class="row">
+
+                <main class="col-md-9">
+
+                    <article class="card  mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4"> Мои заказы </h5>
+
+                            <div class="row">
+
+                                @foreach (var order in _orders)
+                                {
+                                    <div class="col-md-6">
+                                        <figure class="itemside  mb-3">
+
+                                            <div class="aside">
+                                                <a href="/order/details/@order.Id">
+                                                    @order.Id
+                                                </a>
+                                            </div>
+                                            <figcaption class="info">
+                                                <a href="/order/details/@order.Id">
+                                                    <time class="text-muted"><i class="fa fa-calendar-alt"></i> @order.CreatedOn </time>
+                                                    <span class="text-success">Создан</span>
+                                                </a>
+                                            </figcaption>
+
+                                        </figure>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+                    </article>
+
+                </main>
+            </div>
+
+        </div>
+    </section>
+}
+
+@code{
+    private IEnumerable<OrderResponseModel>? _orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _orders = await OrdersService.GetMyOrdersAsync();
+    }
+}

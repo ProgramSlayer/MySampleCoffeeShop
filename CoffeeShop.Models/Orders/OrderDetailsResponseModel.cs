@@ -5,6 +5,12 @@ namespace CoffeeShop.Models.Orders;
 
 public class OrderDetailsResponseModel
 {
+    // For JSON serialization.
+    public OrderDetailsResponseModel()
+        : this(default, default, default, default, default, default)
+    {
+    }
+
     public OrderDetailsResponseModel(
         string id,
         string userId,

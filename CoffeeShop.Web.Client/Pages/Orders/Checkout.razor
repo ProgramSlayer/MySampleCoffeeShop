@@ -1,0 +1,154 @@
+﻿@page "/checkout"
+@attribute [Authorize]
+
+@inject ApiAuthStateProvider AuthState
+@inject IOrdersService OrdersService
+@inject IShoppingCartsService ShoppingCartsService
+@inject NavigationManager NavigationManager
+
+@if (_cartItems is null)
+{
+    @*<LoadingScreen />*@
+    <span>Загрузка...</span>
+}
+else
+{
+    <section class="section-pagetop bg">
+        <div class="container">
+            <h2 class="title-page text-center">Оформление заказа</h2>
+        </div>
+    </section>
+
+    <section class="section-content padding-y bg">
+        <div class="container">
+            <div class="row">
+
+                <aside class="col-md-6">
+                    <div class="card mb-3">
+                        <article class="card-body">
+                            <header class="mb-4">
+                                <h4 class="card-title">Корзина</h4>
+                            </header>
+                            <div class="row">
+
+                                @foreach (var item in _cartItems)
+                                {
+                                    <div class="col-md-6">
+                                        <figure class="itemside  mb-3">
+                                            <div class="aside">
+                                                @*<img src="@product.ImageSource" class="border img-xs" />*@
+                                            </div>
+                                            <figcaption class="info">
+                                                <p> @item.CoffeeName </p>
+                                                <span> @item.Quantity x RUB @item.UnitSellPriceRoubles = RUB @(item.UnitSellPriceRoubles * item.Quantity) </span>
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                }
+
+                            </div>
+                        </article>
+                        <article class="card-body border-top">
+
+                            <dl class="row">
+                                <dt class="col-sm-10">Позиций заказа: <span class="float-right text-muted">@_cartItems.Count()</span></dt>
+                                <dd class="col-sm-2 text-right"><strong>RUB @_totalPrice</strong></dd>
+
+                                <dt class="col-sm-10">Итог:</dt>
+                                <dd class="col-sm-2 text-right"><strong class="h5 text-dark">RUB @_totalPrice</strong></dd>
+                            </dl>
+
+                        </article>
+                    </div>
+                </aside>
+
+                <aside class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+
+                            <h4 class="card-title mb-4">Адрес доставки</h4>
+                            <EditForm Model="_order" OnValidSubmit="SubmitAsync">
+
+                                <DataAnnotationsValidator />
+
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>Город</label>
+                                        <InputText @bind-Value="_order.City" type="text" class="form-control" />
+                                        <ValidationMessage For="() => _order.City" />
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>Почтовый индекс</label>
+                                        <InputText @bind-Value="_order.PostalCode" type="text" class="form-control" />
+                                        <ValidationMessage For="() => _order.PostalCode" />
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>Район</label>
+                                        <InputText @bind-Value="_order.District" type="text" class="form-control" />
+                                        <ValidationMessage For="() => _order.District" />
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>Улица</label>
+                                        <InputText @bind-Value="_order.Street" type="text" class="form-control" />
+                                        <ValidationMessage For="() => _order.Street" />
+                                    </div>
+                                    <div class="col form-group">
+                                        <label>Здание</label>
+                                        <InputText @bind-Value="_order.Building" type="text" class="form-control" />
+                                        <ValidationMessage For="() => _order.Building" />
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block"> Оформить заказ </button>
+                                </div>
+
+                            </EditForm>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </section>
+}
+
+
+@code{
+    private readonly OrderRequestModel _order = new();
+    private string? _email;
+    private decimal _totalPrice;
+    private IEnumerable<CartItem>? _cartItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        var user = state.User;
+        _email = user.FindFirstValue(ClaimTypes.Email);
+        var cartItems = await ShoppingCartsService.GetMyItems();
+        _cartItems = cartItems.Select(i => new CartItem(i));
+        _totalPrice = _cartItems.Sum(i => i.UnitSellPriceRoubles * i.Quantity);
+    }
+
+    private async Task SubmitAsync()
+    {
+        var result = await OrdersService.MakeAnOrderAsync(_order);
+        NavigationManager.NavigateTo($"/order/confirmed/{result.Data.Id}", forceLoad: true);
+    }
+
+    private class CartItem
+    {
+        public int CoffeeId { get; set; }
+        public string CoffeeName { get; set; }
+        public decimal UnitSellPriceRoubles { get; set; }
+        public int Quantity { get; set; }
+
+        public CartItem(ShoppingCartItemResponseModel model)
+        {
+            (CoffeeId, CoffeeName, UnitSellPriceRoubles, Quantity)
+                = (model.CoffeeId, model.CoffeeName, model.UnitSellPriceRoubles, model.Quantity);
+        }
+    }
+}

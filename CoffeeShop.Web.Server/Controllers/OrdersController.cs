@@ -29,7 +29,7 @@ public class OrdersController : ControllerBase
 
         if (!result.IsSuccessful)
         {
-            return Problem();
+            return ToError(result);
         }
 
         return Ok(result.Data);
@@ -42,9 +42,7 @@ public class OrdersController : ControllerBase
 
         if (!result.IsSuccessful)
         {
-            return result.StatusCode == ResultStatusCodes.ResultStatus404NotFound
-                ? NotFound()
-                : Problem();
+            return ToError(result);
         }
 
         return Ok(result.Data);
@@ -57,14 +55,14 @@ public class OrdersController : ControllerBase
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return Problem(title: "User id is null.");
+            return ToError(Result.InternalServerError("User ID is unknown."));
         }
 
         var result = await _orders.GetByUserIdAsync(userId);
 
         if (!result.IsSuccessful)
         {
-            return Problem();
+            return ToError(result);
         }
 
         return Ok(result.Data);
@@ -78,7 +76,7 @@ public class OrdersController : ControllerBase
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return Problem(title: "User id is null");
+            return ToError(Result.InternalServerError("User ID is unknown."));
         }
 
         if (model is null || !ModelState.IsValid)
@@ -90,11 +88,16 @@ public class OrdersController : ControllerBase
 
         if (!result.IsSuccessful)
         {
-            return result.StatusCode == ResultStatusCodes.ResultStatus400BadRequest
-                ? BadRequest(result.Data)
-                : Problem();
+            return ToError(result);
         }
 
         return Ok(result.Data);
+    }
+
+    private ObjectResult ToError(Result result)
+    {
+        return StatusCode(
+            result.StatusCode,
+            result.Errors);
     }
 }

@@ -9,6 +9,10 @@ public record OrderAddressResponseModel(
     string Street,
     string Building)
 {
+    // For JSON deserialization.
+    public OrderAddressResponseModel()
+        : this(default, default, default, default, default)
+    { }
     public OrderAddressResponseModel(Order order) : 
         this(
         order.City,

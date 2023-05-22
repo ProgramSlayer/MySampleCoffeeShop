@@ -13,7 +13,7 @@ else
 {
     <section class="section-pagetop bg">
         <div class="container">
-            <h2 class="title-page text-center">Add Product</h2>
+            <h2 class="title-page text-center">Добавление кофе</h2>
         </div>
     </section>
 
@@ -29,13 +29,13 @@ else
 
 
                             <div class="form-group">
-                                <label>Name</label>
+                                <label>Наименование</label>
                                 <InputText @bind-Value="_model.Name" type="text" class="form-control" />
                                 <ValidationMessage For="(() => _model.Name)" />
                             </div>
 
                             <div class="form-group">
-                                <label>Coffee species</label>
+                                <label>Вид зёрен</label>
                                 <InputSelectNumber @bind-Value="_model.CoffeeSpeciesId" class="form-control">
                                     @foreach (var cs in _coffeeSpecies)
                                     {
@@ -47,7 +47,7 @@ else
 
                             <div class="form-row">
                                 <div class="col form-group">
-                                    <label>Price</label>
+                                    <label>Стоимость (RUB)</label>
                                     <InputNumber @bind-Value="_model.UnitSellPriceRoubles" type="number" class="form-control" />
                                     <ValidationMessage For="(() => _model.UnitSellPriceRoubles)" />
                                 </div>
@@ -55,7 +55,7 @@ else
 
                             <p></p>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-block btn-primary">Add</button>
+                                <button type="submit" class="btn btn-block btn-primary">Добавить</button>
                             </div>
 
                         </EditForm>

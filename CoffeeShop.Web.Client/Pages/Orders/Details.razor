@@ -1,0 +1,74 @@
+﻿@page "/order/details/{id}"
+
+@inject IOrdersService OrdersService
+@attribute [Authorize]
+
+@if (_order is null)
+{
+    <span>Loading...</span>
+}
+else
+{
+    <section class="section-pagetop bg">
+        <div class="container">
+            <h2 class="title-page text-center">Заказ #@Id</h2>
+        </div>
+    </section>
+
+    <section class="section-content padding-y bg">
+        <div class="container">
+
+            <div class="card mb-3">
+                <article class="card-body">
+                    <header class="mb-4">
+                        <h4 class="card-title">Сведения о заказе</h4>
+                    </header>
+                    <div class="row">
+
+                        @foreach (var item in _order.Items)
+                        {
+                            <div class="col-md-6">
+                                <figure class="itemside  mb-3">
+                                    <div class="aside">
+                                        @*<img src="@product.ImageSource" class="border img-xs" />*@
+                                    </div>
+                                    <figcaption class="info">
+                                        <p> @item.CoffeeName </p>
+                                        <span> @item.Quantity x RUB @item.UnitSellPriceRoubles = Всего: RUB @(item.UnitSellPriceRoubles * item.Quantity) </span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        }
+
+                    </div>
+                </article>
+                <article class="card-body border-top">
+
+                    <dl class="row">
+                        <dt class="col-sm-10">Дата оформления: </dt>
+                        <dd class="col-sm-2 text-right"><strong>@_order.CreatedOn</strong></dd>
+
+                        <dt class="col-sm-10">Итог:</dt>
+                        <dd class="col-sm-2 text-right"><strong class="h5 text-dark">RUB @_totalPrice</strong></dd>
+                    </dl>
+
+                </article>
+            </div>
+
+        </div>
+    </section>
+}
+
+@code{
+    private OrderDetailsResponseModel? _order;
+    private decimal _totalPrice;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _order = await OrdersService.GetDetailsByIdAsync(Id);
+        _totalPrice = _order.Items.Sum(i => i.UnitSellPriceRoubles * i.Quantity);
+    }
+}

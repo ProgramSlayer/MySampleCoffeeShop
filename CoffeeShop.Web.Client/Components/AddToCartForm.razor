@@ -29,21 +29,23 @@
     <div class="form-row">
         <div class="form-group col-md">
             <button type="submit" class="btn btn-primary">
-                <span class="text">Add to cart</span>
+                <span class="text">Добавить в корзину</span>
                 <i class="fas fa-shopping-cart"></i>
             </button>
 
             <AuthorizeView Roles="@Constants.AdminRole" Context="Auth">
                 <a href="/products/update/@CoffeeId"
                    class="btn btn-outline-warning">
-                    <i class="fa fa-pen"></i>
+                    @*<i class="fa fa-pen"></i>*@
+                    Редактировать
                 </a>
 
                 <a @onclick:preventDefault
                 @onclick="() => OnDeleteAsync()"
                    href=""
                    class="btn btn-outline-danger">
-                    <i class="fa fa-trash"></i>
+                    @*<i class="fa fa-trash"></i>*@
+                    Удалить
                 </a>
             </AuthorizeView>
         </div>
