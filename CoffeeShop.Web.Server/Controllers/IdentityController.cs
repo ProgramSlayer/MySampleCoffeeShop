@@ -1,5 +1,4 @@
-﻿using CoffeeShop.Models;
-using CoffeeShop.Models.Identity;
+﻿using CoffeeShop.Models.Identity;
 using CoffeeShop.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,28 +16,21 @@ public class IdentityController : ControllerBase
     }
 
     [HttpPost(nameof(Register))]
-    public async Task<ActionResult<Result>> Register([FromBody] RegisterRequestModel model)
+    public async Task<ActionResult> Register([FromBody] RegisterRequestModel model)
     {
         if (model is null || !ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var result = await _identity.RegisterAsync(model);
+        var result = await _identity.RegisterAsync(model);
 
-            if (!result.IsSuccessful)
-            {
-                return BadRequest(result);
-            }
-
-            return StatusCode(StatusCodes.Status201Created);
-        }
-        catch (Exception)
+        if (!result.IsSuccessful)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(result.StatusCode, result.Errors);
         }
+
+        return StatusCode(StatusCodes.Status201Created);
     }
 
     [HttpPost(nameof(Login))]
@@ -49,20 +41,13 @@ public class IdentityController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var result = await _identity.LoginAsync(model);
+        var result = await _identity.LoginAsync(model);
 
-            if (!result.IsSuccessful)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok(result.Data);
-        }
-        catch (Exception)
+        if (!result.IsSuccessful)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(result.StatusCode, result.Errors);
         }
+
+        return Ok(result.Data);
     }
 }

@@ -16,13 +16,14 @@ public class CoffeeSpeciesController : ControllerBase
         => _coffeeSpecies = coffeeSpecies;
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<CoffeeSpeciesResponseModel>>> Get()
     {
         var result = await _coffeeSpecies.GetAllAsync();
 
         if (!result.IsSuccessful)
         {
-            return Problem(); 
+            return StatusCode(result.StatusCode, result.Errors); 
         }
 
         return Ok(result.Data);

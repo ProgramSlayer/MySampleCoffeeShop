@@ -1,0 +1,29 @@
+﻿@if (Coffees is not null && Coffees.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Coffee Species</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var coffee in Coffees)
+        {
+            <tr>
+                <td>@coffee.Id</td>
+                <td>@coffee.Name</td>
+                <td>@coffee.CoffeeSpeciesDisplayName</td>
+                <td>@coffee.UnitSellPriceRoubles</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public List<CoffeeResponseModel> Coffees { get; set; } = new();
+}

@@ -1,0 +1,13 @@
+﻿@attribute [Authorize]
+@inject IAuthenticationService AuthenticationService
+@inject IToastService ToastService
+
+<a href="/" @onclick="Submit">Log out</a>
+
+@code {
+    private async Task Submit()
+    {
+        await AuthenticationService.Logout();
+        ToastService.ShowSuccess("You have successfully logged out");
+    }
+}

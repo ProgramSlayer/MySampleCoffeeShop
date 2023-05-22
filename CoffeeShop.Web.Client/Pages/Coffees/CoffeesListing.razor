@@ -1,0 +1,26 @@
+﻿@page "/coffees"
+
+@inject ICoffeesService CoffeesService
+
+@if (_coffees is null)
+{
+    <span>Got no data to show</span>
+}
+else
+{
+    <CoffeesTable Coffees="_coffees.ToList()" />
+}
+
+@code{
+    private IEnumerable<CoffeeResponseModel>? _coffees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _coffees = await CoffeesService.GetAllAsync();
+    }
+}

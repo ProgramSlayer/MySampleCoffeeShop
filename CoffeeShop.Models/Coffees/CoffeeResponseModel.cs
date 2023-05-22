@@ -10,6 +10,9 @@ public record CoffeeResponseModel(
     string CoffeeSpeciesName,
     string CoffeeSpeciesDisplayName)
 {
+    // For JSON deserialization.
+    public CoffeeResponseModel() : this(default, default, default, default, default, default) { }
+
     public CoffeeResponseModel(Coffee coffee) 
         : this(
         coffee.Id,

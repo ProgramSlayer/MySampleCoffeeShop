@@ -1,0 +1,67 @@
+﻿@page "/account/register"
+@inject IAuthenticationService AuthenticationService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+
+<section class="section-content padding-y bg">
+    <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+        <article class="card-body">
+            <header class="mb-4"><h4 class="card-title">Register</h4></header>
+            <EditForm Model="_model" OnValidSubmit="SubmitAsync">
+
+                <ErrorsList ShowErrors="_showErrors" Errors="_errors" />
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <InputText @bind-Value="_model.Email" type="email" class="form-control" />
+                    <ValidationMessage For="@(() => _model.Email)" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <InputText @bind-Value="_model.Password" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => _model.Password)" />
+                </div>
+                <div class="form-group">
+                    <label>Confirm password</label>
+                    <InputText @bind-Value="_model.ConfirmPassword" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => _model.ConfirmPassword)" />
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Register </button>
+                </div>
+            </EditForm>
+        </article>
+    </div>
+
+    <p class="text-center mt-4">Already have an account? <a href="/account/login">Log In</a></p>
+    <br /><br />
+
+</section>
+
+
+@code{
+    private readonly RegisterRequestModel _model = new();
+
+    private bool _showErrors;
+    private IEnumerable<string>? _errors;
+
+    private async Task SubmitAsync()
+    {
+        var result = await AuthenticationService.Register(_model);
+
+        if (!result.IsSuccessful)
+        {
+            _errors = result.Errors;
+            _showErrors = true;
+        }
+        else
+        {
+            _showErrors = false;
+            ToastService.ShowSuccess("You have successfully registered.\n Please login.");
+            NavigationManager.NavigateTo("/account/login");
+        }
+    }
+}

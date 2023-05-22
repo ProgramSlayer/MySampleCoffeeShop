@@ -23,7 +23,7 @@ public class CoffeesController : ControllerBase
         var result = await _coffees.GetAllAsync();
         if (!result.IsSuccessful)
         {
-            return Problem();
+            return ToError(result);
         }
         return Ok(result.Data);
     }
@@ -36,15 +36,13 @@ public class CoffeesController : ControllerBase
         
         if (!result.IsSuccessful)
         {
-            return result.StatusCode == ResultStatusCodes.ResultStatus404NotFound 
-                ? NotFound()
-                : Problem();
+            return ToError(result);
         }
         
         return Ok(result.Data);
     }
 
-    [HttpPost(nameof(Create))]
+    [HttpPost]
     public async Task<ActionResult<CoffeeResponseModel>> Create(
         [FromBody] CoffeeRequestModel model)
     {
@@ -57,7 +55,7 @@ public class CoffeesController : ControllerBase
         
         if (!result.IsSuccessful)
         {
-            return Problem();
+            return ToError(result);
         }
         
         return CreatedAtRoute(
@@ -67,7 +65,7 @@ public class CoffeesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateAsync(
+    public async Task<IActionResult> Update(
         int id,
         [FromBody] CoffeeRequestModel model)
     {
@@ -80,27 +78,27 @@ public class CoffeesController : ControllerBase
 
         if (!result.IsSuccessful)
         {
-            return result.StatusCode == ResultStatusCodes.ResultStatus404NotFound
-                ? NotFound()
-                : Problem();
+            return ToError(result);
         }
 
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteAsync(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var result = await _coffees.DeleteAsync(id);
 
         if (!result.IsSuccessful)
         {
-            return result.StatusCode == ResultStatusCodes.ResultStatus404NotFound
-                ? NotFound()
-                : Problem();
+            return ToError(result);
         }
 
         return NoContent();
     }
 
+    private ObjectResult ToError(Result result)
+    {
+        return StatusCode(result.StatusCode, result.Errors);
+    }
 }

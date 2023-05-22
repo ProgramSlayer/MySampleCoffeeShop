@@ -1,0 +1,61 @@
+﻿@page "/coffees/{id:int}"
+@page "/coffees/details/{id:int}"
+@inject ICoffeesService CoffeesService
+
+@if (_coffee is null)
+{
+    <span>Loading...</span>
+}
+else
+{
+    <section class="section-content padding-y bg">
+        <div class="container">
+            <div class="card">
+                <div class="row no-gutters">
+                    <aside class="col-md-6">
+                        <article class="gallery-wrap">
+                            <div class="img-big-wrap">
+                                @*<a href="#"><img src="@product.ImageSource" /></a>*@
+                                Kukaracha
+                            </div>
+                        </article>
+                    </aside>
+                    <main class="col-md-6 border-left">
+                        <article class="content-body">
+
+                            <h2 class="title">@_coffee.Name</h2>
+
+                            <div class="mb-3">
+                                <var class="price h4">RUB @_coffee.UnitSellPriceRoubles</var>
+                            </div>
+
+                            <dl class="row">
+
+                                <dt class="col-sm-3">Coffee Species</dt>
+                                <dd class="col-sm-9">@_coffee.CoffeeSpeciesDisplayName</dd>
+
+                            </dl>
+
+                            <hr />
+
+                            <AddToCartForm CoffeeId="@_coffee.Id" CoffeeName="@_coffee.Name" />
+
+                        </article>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    private CoffeeResponseModel? _coffee;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _coffee = await CoffeesService.GetByIdAsync(Id);
+    }
+}

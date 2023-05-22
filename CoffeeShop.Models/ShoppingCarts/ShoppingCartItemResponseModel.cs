@@ -8,6 +8,9 @@ public record ShoppingCartItemResponseModel(
     decimal UnitSellPriceRoubles,
     int Quantity)
 {
+    // For JSON deserialization.
+    public ShoppingCartItemResponseModel() : this(default, default, default, default) { }
+
     public ShoppingCartItemResponseModel(ShoppingCartItem sci) : this(
         sci.CoffeeId,
         sci.Coffee.Name,

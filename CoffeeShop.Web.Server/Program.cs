@@ -1,3 +1,4 @@
+using CoffeeShop.Services.Coffees;
 using CoffeeShop.Web.Server.Extensions;
 using CoffeeShop.Web.Server.Services;
 

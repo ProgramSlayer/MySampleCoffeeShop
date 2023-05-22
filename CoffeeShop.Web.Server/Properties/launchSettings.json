@@ -39,7 +39,7 @@
     //},
     "CoffeeShop.Server": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7144;http://localhost:5151",
       "environmentVariables": {
