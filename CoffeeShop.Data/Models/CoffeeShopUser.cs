@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeShop.Data.Models;
 
+/// <summary>
+/// Пользователь.
+/// </summary>
 public class CoffeeShopUser : IdentityUser, IAuditInfo, IDeletableEntity
 {
     public CoffeeShopUser() => Id = Guid.NewGuid().ToString();

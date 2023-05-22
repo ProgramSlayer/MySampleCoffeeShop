@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeShop.Data.Models;
 
+/// <summary>
+/// Роль пользователя магазина кофе.
+/// </summary>
 public class CoffeeShopRole : IdentityRole, IAuditInfo, IDeletableEntity
 {
     public CoffeeShopRole() : this(null!) { }
