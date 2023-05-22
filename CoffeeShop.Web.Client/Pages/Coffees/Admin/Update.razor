@@ -1,13 +1,97 @@
 ﻿@page "/coffees/update/{id:int}"
 @page "/coffees/admin/update/{id:int}"
 @attribute [Authorize(Roles = CoffeeShop.Common.Constants.AdminRole)]
+@inject ICoffeeSpeciesService CoffeeSpeciesService
+@inject ICoffeesService CoffeesService
+@inject NavigationManager NavigationManager
 
+@if (_coffeeSpecies is null || _model is null)
+{
+    <span>Загрузка...</span>
+}
+else
+{
+    <section class="section-pagetop bg">
+        <div class="container">
+            <h2 class="title-page text-center">Редактирование кофе</h2>
+        </div>
+    </section>
 
-AMOGUS
+    <section class="section-content padding-y bg">
+        <div class="container">
+            <div class="row">
+                <div class="card mx-auto">
+                    <article class="card-body">
+
+                        <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
+
+                            <DataAnnotationsValidator />
+
+                            <div class="form-group">
+                                <label>Наименование</label>
+                                <InputText @bind-Value="_model.Name" type="text" class="form-control" />
+                                <ValidationMessage For="(() => _model.Name)" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Вид зёрен</label>
+                                <InputSelectNumber @bind-Value="_model.CoffeeSpeciesId" class="form-control">
+                                    @foreach (var cs in _coffeeSpecies)
+                                    {
+                                        <option value="@cs.Id">@cs.DisplayName</option>
+                                    }
+                                </InputSelectNumber>
+                                <ValidationMessage For="(() => _model.CoffeeSpeciesId)" />
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col form-group">
+                                    <label>Стоимость (RUB)</label>
+                                    <InputNumber @bind-Value="_model.UnitSellPriceRoubles" type="number" class="form-control" />
+                                    <ValidationMessage For="(() => _model.UnitSellPriceRoubles)" />
+                                </div>
+                            </div>
+
+                            <p></p>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-block btn-primary">Сохранить</button>
+                            </div>
+
+                        </EditForm>
+
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+}
 
 @code{
+    private CoffeeRequestModel _model;
+    private IEnumerable<CoffeeSpeciesResponseModel> _coffeeSpecies;
+
     [Parameter]
     public int Id { get; set; }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        _coffeeSpecies = await CoffeeSpeciesService.GetAllAsync();
+        var coffee = await CoffeesService.GetByIdAsync(Id);
+        _model = new()
+        {
+            CoffeeSpeciesId = coffee.CoffeeSpeciesId,
+            Name = coffee.Name,
+            UnitSellPriceRoubles = coffee.UnitSellPriceRoubles,
+        };
+    }
 
+    private async Task OnValidSubmitAsync()
+    {
+        var result = await CoffeesService.UpdateAsync(Id, _model);
+
+        if (result.IsSuccessful)
+        {
+            NavigationManager.NavigateTo($"/coffees/{Id}");
+        }
+    }
 }

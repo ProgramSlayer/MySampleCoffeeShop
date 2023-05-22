@@ -13,7 +13,7 @@
     <div class="form-row">
 
         <div class="form-group col-md flex-grow-0">
-            <label>Quantity</label>
+            <label>Количество</label>
             <div class="input-group mb-3 input-spinner">
                 <div class="input-group-prepend">
                     <button @onclick="DecrementQuantity" class="btn btn-light" type="button" id="button-minus"> &minus; </button>
@@ -30,13 +30,11 @@
         <div class="form-group col-md">
             <button type="submit" class="btn btn-primary">
                 <span class="text">Добавить в корзину</span>
-                <i class="fas fa-shopping-cart"></i>
             </button>
 
             <AuthorizeView Roles="@Constants.AdminRole" Context="Auth">
-                <a href="/products/update/@CoffeeId"
+                <a href="/coffees/update/@CoffeeId"
                    class="btn btn-outline-warning">
-                    @*<i class="fa fa-pen"></i>*@
                     Редактировать
                 </a>
 
@@ -44,7 +42,6 @@
                 @onclick="() => OnDeleteAsync()"
                    href=""
                    class="btn btn-outline-danger">
-                    @*<i class="fa fa-trash"></i>*@
                     Удалить
                 </a>
             </AuthorizeView>
@@ -102,7 +99,7 @@
     {
         var confirmed = await JSRuntime.InvokeAsync<bool>(
             "confirm",
-            "Are you sure you want to delete this item?");
+            "Удалить эту запись?");
 
         if (confirmed)
         {
@@ -110,8 +107,8 @@
 
             if (result.IsSuccessful)
             {
-                this.ToastService.ShowSuccess($"{CoffeeName} has been deleted successfully.");
-                this.NavigationManager.NavigateTo("/products");
+                this.ToastService.ShowSuccess($"Товар {CoffeeName} был удалён.");
+                this.NavigationManager.NavigateTo("/coffees");
             }
             else
             {

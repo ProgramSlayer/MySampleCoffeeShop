@@ -1,6 +1,7 @@
 ﻿@page "/coffees/{id:int}"
 @page "/coffees/details/{id:int}"
 @inject ICoffeesService CoffeesService
+@attribute [Authorize]
 
 @if (_coffee is null)
 {
@@ -12,14 +13,6 @@ else
         <div class="container">
             <div class="card">
                 <div class="row no-gutters">
-                    <aside class="col-md-6">
-                        <article class="gallery-wrap">
-                            <div class="img-big-wrap">
-                                @*<a href="#"><img src="@product.ImageSource" /></a>*@
-                                Kukaracha
-                            </div>
-                        </article>
-                    </aside>
                     <main class="col-md-6 border-left">
                         <article class="content-body">
 

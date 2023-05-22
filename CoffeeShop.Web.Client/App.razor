@@ -3,18 +3,18 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" >
                 <Authorizing>
-                    <text>Please wait, we are authorizing the user.</text>
+                    <text>Идет авторизация пользователя...</text>
                 </Authorizing>
                 <NotAuthorized>
-                    <text> You are not authorized to access this page. </text>
+                    <text> У вас нет доступа к этой странице. </text>
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
-            <PageTitle>Not found</PageTitle>
+            <PageTitle>Страница не найдена</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <p role="alert">Страница не найдена</p>
             </LayoutView>
         </NotFound>
     </Router>

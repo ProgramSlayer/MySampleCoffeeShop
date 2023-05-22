@@ -7,7 +7,7 @@
 
 @if (_coffeeSpecies is null)
 {
-    <span>Loading...</span>
+    <span>Загрузка...</span>
 }
 else
 {
@@ -26,7 +26,6 @@ else
                         <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
 
                             <DataAnnotationsValidator />
-
 
                             <div class="form-group">
                                 <label>Наименование</label>
@@ -75,6 +74,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         _coffeeSpecies = await CoffeeSpeciesService.GetAllAsync();
+        _model.CoffeeSpeciesId = _coffeeSpecies.First().Id;
     }
 
 

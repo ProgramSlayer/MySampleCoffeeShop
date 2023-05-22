@@ -1,4 +1,5 @@
-﻿@page "/coffees"
+﻿@page "/"
+@page "/coffees"
 
 @inject ICoffeesService CoffeesService
 @inject IShoppingCartsService ShoppingCartsService
@@ -30,13 +31,6 @@ else
                         {
                             <div class="col-md-4">
                                 <figure class="card card-product-grid">
-                                    <div class="img-wrap">
-                                        @*<img src="@product.ImageSource" />*@
-                                        <a class="btn-overlay" href="/coffees/@coffee.Id">
-                                            @*<i class="fa fa-search-plus"></i>*@
-                                            Подробнее
-                                        </a>
-                                    </div>
                                     <figcaption class="info-wrap">
                                         <div class="fix-height">
                                             <a href="/coffees/@coffee.Id" class="title">
@@ -46,12 +40,15 @@ else
                                                 <span class="price">RUB @coffee.UnitSellPriceRoubles</span>
                                             </div>
                                         </div>
-                                        <a @onclick="() => AddToCart(coffee.Id)"
-                                        @onclick:preventDefault
-                                           href="#"
-                                           class="btn btn-block btn-primary">
-                                            Добавить в корзину
-                                        </a>
+                                        <AuthorizeView>
+                                            <a @onclick="() => AddToCart(coffee.Id)"
+                                            @onclick:preventDefault
+                                               href="#"
+                                               class="btn btn-block btn-primary">
+                                                Добавить в корзину
+                                            </a>
+                                        </AuthorizeView>
+                                        
                                     </figcaption>
                                 </figure>
                             </div>
